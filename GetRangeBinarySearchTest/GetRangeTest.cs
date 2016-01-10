@@ -49,6 +49,25 @@ namespace GetRangeBinarySearchTest
         }
 
         [TestMethod]
+        public void GetRange_ArgumentNullException()
+        {
+            try
+            {
+                List<int> nullList = null;
+                nullList.GetRangeBinarySearch(-5, -6);
+                Assert.Fail();
+            }
+            catch (ArgumentNullException)
+            {
+
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
         public void GetRange_LargherThanAll()
         {
             var range = intValues.GetRangeBinarySearch(12, 12);
@@ -157,6 +176,44 @@ namespace GetRangeBinarySearchTest
                 for (int to = from; to <= high; to++)
                 {
                     var range = intArray.GetRangeBinarySearch(from, to);
+                    var expectedRange = GetRangeSlow(intArray, from, to);
+                    Assert.IsTrue(expectedRange.SequenceEqual(range));
+                    counter++;
+                }
+            int n = high - low + 1;
+            Assert.AreEqual((n * (n + 1)) / 2, counter);
+            Trace.WriteLine(counter);
+        }
+
+        [TestMethod]
+        public void GetRangeEnumeration_List_MassTest()
+        {
+            int counter = 0;
+            int low = -8;
+            int high = 14;
+            for (int from = low; from <= high; from++)
+                for (int to = from; to <= high; to++)
+                {
+                    var range = intValues.GetRangeEnumerationBinarySearch(from, to);
+                    var expectedRange = GetRangeSlow(intValues, from, to);
+                    Assert.IsTrue(expectedRange.SequenceEqual(range));
+                    counter++;
+                }
+            int n = high - low + 1;
+            Assert.AreEqual((n * (n + 1)) / 2, counter);
+            Trace.WriteLine(counter);
+        }
+
+        [TestMethod]
+        public void GetRangeEnumeration_Array_MassTest()
+        {
+            int counter = 0;
+            int low = -8;
+            int high = 14;
+            for (int from = low; from <= high; from++)
+                for (int to = from; to <= high; to++)
+                {
+                    var range = intArray.GetRangeEnumerationBinarySearch(from, to);
                     var expectedRange = GetRangeSlow(intArray, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;

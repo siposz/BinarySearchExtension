@@ -8,44 +8,64 @@ namespace GetRangeBinarySearch
 {
     public static class GetRangeBinarySearchExtension
     {
+        private delegate int BinarySearch<T, TList>(TList sourceCollection, T value, int startIndex, IComparer<T> comparer)
+           where TList : IList<T>;
+
         public static List<T> GetRangeBinarySearch<T>(this List<T> sourceList, T from, T to, IComparer<T> comparer = null)
         {
-            RangeIndex range = GetRangeIndex(sourceList, from, to, (list, value, valueComparer) => { return list.BinarySearch(value, comparer); }, comparer);
+            RangeIndex range = GetRangeIndex(sourceList, from, to, BinarySearchList, comparer);
             if (range.IsEmpty)
                 return new List<T>();
 
-            return sourceList.GetRange(range.FromIndex, range.ToIndex - range.FromIndex + 1);
+            return sourceList.GetRange(range.FromIndex, range.Length);
+        }
+
+        public static IEnumerable<T> GetRangeEnumerationBinarySearch<T>(this List<T> sourceList, T from, T to, IComparer<T> comparer = null)
+        {
+            RangeIndex range = GetRangeIndex(sourceList, from, to, BinarySearchList, comparer);
+            if (range.IsEmpty)
+                return new List<T>();
+            return GetRangeFromEnumeration(sourceList, range);
         }
 
         public static T[] GetRangeBinarySearch<T>(this T[] sourceArray, T from, T to, IComparer<T> comparer = null)
         {
-            RangeIndex range = GetRangeIndex(sourceArray, from, to, (array, value, valueComparer) => { return Array.BinarySearch(array, value, comparer); }, comparer);
+            RangeIndex range = GetRangeIndex(sourceArray, from, to, BinarySearchArray, comparer);
             if (range.IsEmpty)
                 return new T[0];
-            T[] destinationArray = new T[range.ToIndex - range.FromIndex + 1];
-            Array.Copy(sourceArray, range.FromIndex, destinationArray, 0, range.ToIndex - range.FromIndex + 1);
-            return destinationArray; 
+            T[] destinationArray = new T[range.Length];
+            Array.Copy(sourceArray, range.FromIndex, destinationArray, 0, range.Length);
+            return destinationArray;
         }
 
-        private static RangeIndex GetRangeIndex<T, TList>(TList source, T from, T to, Func<TList, T, IComparer<T>, int> BinarySearch, IComparer<T> comparer = null)
+        public static IEnumerable<T> GetRangeEnumerationBinarySearch<T>(this T[] sourceArray, T from, T to, IComparer<T> comparer = null)
+        {
+            RangeIndex range = GetRangeIndex(sourceArray, from, to, BinarySearchArray, comparer);
+            return GetRangeFromEnumeration(sourceArray, range);
+        }
+
+        private static RangeIndex GetRangeIndex<T, TList>(TList source, T from, T to, BinarySearch<T, TList> binarySearch, IComparer<T> comparer = null)
             where TList : IList<T>
         {
-            //Get the default comparer
-            comparer = comparer ?? Comparer<T>.Default;
+            if (source == null)
+                throw new ArgumentNullException("RangeBinarySearch source collection is null");
 
             if (source.Count == 0)
                 return RangeIndex.CreateEmpty();
 
+            //Get the default comparer if null
+            comparer = comparer ?? Comparer<T>.Default;
+
             if (comparer.Compare(from, to) > 0)
                 throw new ArgumentException("from should be smaller or equal than to");
 
-            int fromIndex = GetFromIndex(source, from, comparer, BinarySearch);
+            int fromIndex = GetFromIndex(source, from, comparer, binarySearch);
 
             //All element of the source is smaller then from => return empty
             if (fromIndex == source.Count)
                 return RangeIndex.CreateEmpty();
 
-            int toIndex = GetToIndex(source, to, comparer, BinarySearch);
+            int toIndex = GetToIndex(source, to, fromIndex, comparer, binarySearch);
 
             //All element of the source is larger then to => return empty
             if (toIndex < 0)
@@ -54,10 +74,25 @@ namespace GetRangeBinarySearch
             return new RangeIndex(fromIndex, toIndex);
         }
 
-        private static int GetToIndex<T, TList>(TList source, T to, IComparer<T> comparer, Func<TList, T, IComparer<T>, int> BinarySearch)
+        private static IEnumerable<T> GetRangeFromEnumeration<T>(IEnumerable<T> sourceList, RangeIndex range)
+        {
+            return sourceList.Skip(range.FromIndex).Take(range.Length);
+        }
+
+        private static int BinarySearchList<T>(List<T> sourceCollection, T value, int startIndex, IComparer<T> comparer)
+        {
+            return sourceCollection.BinarySearch(startIndex, sourceCollection.Count - startIndex, value, comparer);
+        }
+
+        private static int BinarySearchArray<T>(T[] sourceCollection, T value, int startIndex, IComparer<T> comparer)
+        {
+            return Array.BinarySearch(sourceCollection, startIndex, sourceCollection.Length - startIndex, value, comparer);
+        }
+
+        private static int GetToIndex<T, TList>(TList source, T to, int fromIndex, IComparer<T> comparer, BinarySearch<T, TList> binarySearch)
               where TList : IList<T>
         {
-            int toIndex = BinarySearch(source, to, comparer);
+            int toIndex = binarySearch(source, to, fromIndex, comparer);
             if (toIndex < 0)
             {
                 //This is the last index where the element is smaller than to
@@ -71,10 +106,10 @@ namespace GetRangeBinarySearch
             return toIndex;
         }
 
-        private static int GetFromIndex<T, TList>(TList source, T from, IComparer<T> comparer, Func<TList, T, IComparer<T>, int> BinarySearch)
+        private static int GetFromIndex<T, TList>(TList source, T from, IComparer<T> comparer, BinarySearch<T, TList> binarySearch)
             where TList : IList<T>
         {
-            int fromIndex = BinarySearch(source, from, comparer);
+            int fromIndex = binarySearch(source, from, 0, comparer);
             if (fromIndex < 0)
                 //The first index where the element is larger than from
                 fromIndex = ~fromIndex;
@@ -89,7 +124,7 @@ namespace GetRangeBinarySearch
         {
             public int FromIndex { get; private set; }
             public int ToIndex { get; private set; }
-
+            public int Length { get { return ToIndex - FromIndex + 1; } }
             public bool IsEmpty { get { return ToIndex < FromIndex; } }
 
             public static RangeIndex CreateEmpty()
