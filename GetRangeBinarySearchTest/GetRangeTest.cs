@@ -20,7 +20,15 @@ namespace GetRangeBinarySearchTest
         //    Assert.AreEqual(2, Array.BinarySearch(ints, 1, ints.Length - 1, 3));
         //}
 
-        public List<int> intValues = new List<int>() { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
+        [TestInitialize]
+        public void Initalize()
+        {
+            intArray = intValues.ToArray();
+        }
+
+        public static List<int> intValues = new List<int>() { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
+
+        public static int[] intArray;
 
         [TestMethod]
         public void GetRange_ArgumentException()
@@ -38,7 +46,6 @@ namespace GetRangeBinarySearchTest
             {
                 Assert.Fail();
             }
-
         }
 
         [TestMethod]
@@ -106,8 +113,6 @@ namespace GetRangeBinarySearchTest
             range = GetRangeSlow(intValues, -6, 3).ToList();
             Assert.IsNotNull(range);
             Assert.IsTrue(range.SequenceEqual(new List<int> { -5, -2, 0, 0, 1, 2, 3 }));
-
-
         }
 
         [TestMethod]
@@ -123,10 +128,8 @@ namespace GetRangeBinarySearchTest
             Assert.AreEqual(intValues.Count, range.Count);
         }
 
-
-
         [TestMethod]
-        public void GetRange_MassTest()
+        public void GetRange_List_MassTest()
         {
             int counter = 0;
             int low = -8;
@@ -134,7 +137,9 @@ namespace GetRangeBinarySearchTest
             for (int from = low; from <= high; from++)
                 for (int to = from; to <= high; to++)
                 {
-                    GetRangeSlow(intValues, from, to).SequenceEqual(intValues.GetRangeBinarySearch(from, to));
+                    var range = intValues.GetRangeBinarySearch(from, to);
+                    var expectedRange = GetRangeSlow(intValues, from, to);
+                    Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
             int n = high - low + 1;
@@ -142,7 +147,26 @@ namespace GetRangeBinarySearchTest
             Trace.WriteLine(counter);
         }
 
-        private IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null) 
+        [TestMethod]
+        public void GetRange_Array_MassTest()
+        {
+            int counter = 0;
+            int low = -8;
+            int high = 14;
+            for (int from = low; from <= high; from++)
+                for (int to = from; to <= high; to++)
+                {
+                    var range = intArray.GetRangeBinarySearch(from, to);
+                    var expectedRange = GetRangeSlow(intArray, from, to);
+                    Assert.IsTrue(expectedRange.SequenceEqual(range));
+                    counter++;
+                }
+            int n = high - low + 1;
+            Assert.AreEqual((n * (n + 1)) / 2, counter);
+            Trace.WriteLine(counter);
+        }
+
+        private IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)
         {
             //Get the default comparer
             comparer = comparer ?? Comparer<T>.Default;
