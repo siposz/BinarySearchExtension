@@ -4,31 +4,53 @@ using System.Collections.Generic;
 using GetRangeBinarySearch;
 using System.Diagnostics;
 using System.Linq;
+using static GetRangeBinarySearch.GetRangeBinarySearchExtension;
 
 namespace GetRangeBinarySearchTest
 {
     [TestClass]
     public class GetRangeTest
     {
-        //[TestMethod]
-        //[Ignore]
-        //public void TestMethod1()
-        //{
-        //    int[] ints = new int[3] { 1, 2, 3 };
+        private class Flight
+        {
+            public string DepartureStation { get; set; }
+            public string ArrivalStation { get; set; }
 
-        //    Assert.AreEqual(1, Array.BinarySearch(ints, 2));
-        //    Assert.AreEqual(2, Array.BinarySearch(ints, 1, ints.Length - 1, 3));
-        //}
+            public DateTime DepartureTime { get; set; }
+        }
+
+        private class DateComparer : IComparer<DateTime>
+        {
+            public int Compare(DateTime x, DateTime y)
+            {
+                return x.Date.CompareTo(y.Date);
+            }
+        }
+
+
+        List<int> intValues = new List<int>() { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
+
+        int[] intArray;
+
+        List<Flight> flights = new List<Flight>()
+        {
+             new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,1,10,30,0,DateTimeKind.Utc) },
+             new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,3,10,30,0,DateTimeKind.Utc) },
+             new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,3,16,30,0,DateTimeKind.Utc) },
+             new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,5,16,30,0,DateTimeKind.Utc) },
+        };
+
+        [TestMethod]
+        public void TestMethod1()
+        {
+            
+        }
 
         [TestInitialize]
         public void Initalize()
         {
             intArray = intValues.ToArray();
         }
-
-        public static List<int> intValues = new List<int>() { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
-
-        public static int[] intArray;
 
         [TestMethod]
         public void GetRange_ArgumentException()
@@ -221,6 +243,17 @@ namespace GetRangeBinarySearchTest
             int n = high - low + 1;
             Assert.AreEqual((n * (n + 1)) / 2, counter);
             Trace.WriteLine(counter);
+        }
+
+        [TestMethod]
+        public void IList_BinarySearchTest()
+        {
+            for (int i = -7; i < 13; i++)
+            {
+                int i1 = intValues.BinarySearch(i);
+                int i2 = ((IList<int>)intValues).BinarySearch(i);
+                Assert.AreEqual(i1, i2);
+            }
         }
 
         private IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,63 @@ namespace GetRangeBinarySearch
 {
     public static class GetRangeBinarySearchExtension
     {
-        private delegate int BinarySearch<T, TList>(TList sourceCollection, T value, int startIndex, IComparer<T> comparer)
+        private delegate int BinarySearchDelegate<T, TList>(TList sourceCollection, T value, int startIndex, IComparer<T> comparer)
            where TList : IList<T>;
+
+        #region BinarySarch extension for IList
+
+        //public static FindOneWithBinarySearch<T>()
+
+        public static int BinarySearch<T, TSelected>(this IList<T> list, Func<T, TSelected> selector, TSelected value, IComparer<TSelected> comparer = null)
+        {
+            return 0;
+            //return new SelectWrapper<,>
+        }
+
+        public static int BinarySearch<T>(this IList<T> list, T value, IComparer<T> comparer = null)
+        {
+            return list.BinarySearch(0, list.Count, value, comparer);
+        }
+
+        public static int BinarySearch<T>(this IList<T> list, int index, int length, T value, IComparer<T> comparer = null)
+        {
+            if (list == null)
+                return 0; 
+            //Get the default comparer if null
+            if (comparer == null)
+                comparer = comparer ?? Comparer<T>.Default;
+
+            int lo = index;
+            int hi = index + length - 1;
+            while (lo <= hi)
+            {
+                int i = lo + ((hi - lo) >> 1);
+                int order = comparer.Compare(list[i], value);
+
+                if (order == 0)
+                    return i;
+
+                if (order < 0)
+                    lo = i + 1;
+                else
+                    hi = i - 1;
+            }
+
+            return ~lo;
+        }
+
+        #endregion
+
+        //public static List<TSource> GetRangeBinarySearch<TSource, TSelected>(this List<TSource> sourceList, TSelected from, TSelected to, Func<TSource, TSelected> selector, IComparer<TSelected> comparer = null)
+        //{
+        //    RangeIndex range = GetRangeIndex(sourceList, from, to, BinarySearchList, comparer);
+        //    if (range.IsEmpty)
+        //        return new List<TSource>();
+
+        //    return sourceList.GetRange(range.FromIndex, range.Length);
+        //}
+
+        #region GetRange extensions
 
         public static List<T> GetRangeBinarySearch<T>(this List<T> sourceList, T from, T to, IComparer<T> comparer = null)
         {
@@ -44,7 +100,9 @@ namespace GetRangeBinarySearch
             return GetRangeFromEnumeration(sourceArray, range);
         }
 
-        private static RangeIndex GetRangeIndex<T, TList>(TList source, T from, T to, BinarySearch<T, TList> binarySearch, IComparer<T> comparer = null)
+        #endregion
+
+        private static RangeIndex GetRangeIndex<T, TList>(TList source, T from, T to, BinarySearchDelegate<T, TList> binarySearch, IComparer<T> comparer = null)
             where TList : IList<T>
         {
             if (source == null)
@@ -54,7 +112,8 @@ namespace GetRangeBinarySearch
                 return RangeIndex.CreateEmpty();
 
             //Get the default comparer if null
-            comparer = comparer ?? Comparer<T>.Default;
+            if (comparer == null)
+                comparer = comparer ?? Comparer<T>.Default;
 
             if (comparer.Compare(from, to) > 0)
                 throw new ArgumentException("from should be smaller or equal than to");
@@ -89,7 +148,7 @@ namespace GetRangeBinarySearch
             return Array.BinarySearch(sourceCollection, startIndex, sourceCollection.Length - startIndex, value, comparer);
         }
 
-        private static int GetToIndex<T, TList>(TList source, T to, int fromIndex, IComparer<T> comparer, BinarySearch<T, TList> binarySearch)
+        private static int GetToIndex<T, TList>(TList source, T to, int fromIndex, IComparer<T> comparer, BinarySearchDelegate<T, TList> binarySearch)
               where TList : IList<T>
         {
             int toIndex = binarySearch(source, to, fromIndex, comparer);
@@ -106,7 +165,7 @@ namespace GetRangeBinarySearch
             return toIndex;
         }
 
-        private static int GetFromIndex<T, TList>(TList source, T from, IComparer<T> comparer, BinarySearch<T, TList> binarySearch)
+        private static int GetFromIndex<T, TList>(TList source, T from, IComparer<T> comparer, BinarySearchDelegate<T, TList> binarySearch)
             where TList : IList<T>
         {
             int fromIndex = binarySearch(source, from, 0, comparer);
@@ -136,6 +195,97 @@ namespace GetRangeBinarySearch
             {
                 FromIndex = fromIndex;
                 ToIndex = toIndex;
+            }
+        }
+
+        private class SelectWrapper<TSelected, TSource> : IList<TSelected>
+        {
+            private IList<TSource> WrappedList;
+            Func<TSource, TSelected> Selector;
+
+            public SelectWrapper(IList<TSource> sourceList, Func<TSource, TSelected> selector)
+            {
+                WrappedList = sourceList;
+                Selector = selector;
+            }
+
+            public TSelected this[int index]
+            {
+                get
+                {
+                    return Selector(WrappedList[index]);
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public int Count
+            {
+                get
+                {
+                    return WrappedList.Count;
+                }
+            }
+
+            public bool IsReadOnly
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public void Add(TSelected item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Clear()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Contains(TSelected item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CopyTo(TSelected[] array, int arrayIndex)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerator<TSelected> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            public int IndexOf(TSelected item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Insert(int index, TSelected item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Remove(TSelected item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RemoveAt(int index)
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
             }
         }
     }
