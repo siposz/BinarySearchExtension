@@ -92,7 +92,7 @@ namespace GetRangeBinarySearchTest
         [TestMethod]
         public void GetRange_LargherThanAll()
         {
-            var range = intValues.GetRangeBinarySearch(12, 12);
+            IList<int> range = intValues.GetRangeBinarySearch(12, 12);
             Assert.IsNotNull(range);
             Assert.AreEqual(0, range.Count);
 
@@ -104,7 +104,7 @@ namespace GetRangeBinarySearchTest
         [TestMethod]
         public void GetRange_LowerThanAll()
         {
-            List<int> range;
+            IList<int> range;
             range = intValues.GetRangeBinarySearch(-6, -6);
             Assert.IsNotNull(range);
             Assert.AreEqual(0, range.Count);
@@ -117,7 +117,7 @@ namespace GetRangeBinarySearchTest
         [TestMethod]
         public void GetRange_EqualFromTo()
         {
-            List<int> range;
+            IList<int> range;
             range = intValues.GetRangeBinarySearch(-5, -5);
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Count);
@@ -159,7 +159,7 @@ namespace GetRangeBinarySearchTest
         [TestMethod]
         public void GetRange_Full()
         {
-            List<int> range;
+            IList<int> range;
             range = intValues.GetRangeBinarySearch(-5, 11);
             Assert.IsNotNull(range);
             Assert.AreEqual(intValues.Count, range.Count);
@@ -254,6 +254,24 @@ namespace GetRangeBinarySearchTest
                 int i2 = ((IList<int>)intValues).BinarySearch(i);
                 Assert.AreEqual(i1, i2);
             }
+        }
+
+        [TestMethod]
+        public void Selector_BinarySearchTest()
+        {
+            DateTime oneDayBeforeFirst = flights.First().DepartureTime.AddDays(-1).Date;
+            for (int i = 0; i < 10; i++)
+            {
+                DateTime day = oneDayBeforeFirst.AddDays(i);
+                Flight flightOnDay = flights.FirstOrDefault(f => f.DepartureTime.Date == day);
+                int expectedIndex = flights.IndexOf(flightOnDay);
+                int binarySearchIndex = flights.BinarySearch(f => f.DepartureTime, day, new DateComparer());
+                if (expectedIndex < 0)
+                    Assert.IsTrue(binarySearchIndex < 0);
+                else
+                    Assert.AreEqual(flights[expectedIndex].DepartureTime.Date, flights[binarySearchIndex].DepartureTime.Date);
+            }
+            
         }
 
         private IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)
