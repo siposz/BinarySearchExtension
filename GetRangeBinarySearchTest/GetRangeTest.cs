@@ -27,10 +27,7 @@ namespace GetRangeBinarySearchTest
             }
         }
 
-
         List<int> intValues = new List<int>() { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
-
-        int[] intArray;
 
         List<Flight> flights = new List<Flight>()
         {
@@ -43,13 +40,12 @@ namespace GetRangeBinarySearchTest
         [TestMethod]
         public void TestMethod1()
         {
-            
+
         }
 
         [TestInitialize]
         public void Initalize()
         {
-            intArray = intValues.ToArray();
         }
 
         [TestMethod]
@@ -170,7 +166,7 @@ namespace GetRangeBinarySearchTest
         }
 
         [TestMethod]
-        public void GetRange_List_MassTest()
+        public void GetRange_MassTest()
         {
             int counter = 0;
             int low = -8;
@@ -180,25 +176,6 @@ namespace GetRangeBinarySearchTest
                 {
                     var range = intValues.GetRangeBinarySearch(from, to);
                     var expectedRange = GetRangeSlow(intValues, from, to);
-                    Assert.IsTrue(expectedRange.SequenceEqual(range));
-                    counter++;
-                }
-            int n = high - low + 1;
-            Assert.AreEqual((n * (n + 1)) / 2, counter);
-            Trace.WriteLine(counter);
-        }
-
-        [TestMethod]
-        public void GetRange_Array_MassTest()
-        {
-            int counter = 0;
-            int low = -8;
-            int high = 14;
-            for (int from = low; from <= high; from++)
-                for (int to = from; to <= high; to++)
-                {
-                    var range = intArray.GetRangeBinarySearch(from, to);
-                    var expectedRange = GetRangeSlow(intArray, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -227,25 +204,6 @@ namespace GetRangeBinarySearchTest
         }
 
         [TestMethod]
-        public void GetRangeEnumeration_Array_MassTest()
-        {
-            int counter = 0;
-            int low = -8;
-            int high = 14;
-            for (int from = low; from <= high; from++)
-                for (int to = from; to <= high; to++)
-                {
-                    var range = intArray.GetRangeEnumerationBinarySearch(from, to);
-                    var expectedRange = GetRangeSlow(intArray, from, to);
-                    Assert.IsTrue(expectedRange.SequenceEqual(range));
-                    counter++;
-                }
-            int n = high - low + 1;
-            Assert.AreEqual((n * (n + 1)) / 2, counter);
-            Trace.WriteLine(counter);
-        }
-
-        [TestMethod]
         public void IList_BinarySearchTest()
         {
             for (int i = -7; i < 13; i++)
@@ -260,7 +218,9 @@ namespace GetRangeBinarySearchTest
         public void Selector_BinarySearchTest()
         {
             DateTime oneDayBeforeFirst = flights.First().DepartureTime.AddDays(-1).Date;
-            for (int i = 0; i < 10; i++)
+            DateTime lastDay = flights.Last().DepartureTime.AddDays(1).Date;
+            int length = (lastDay - oneDayBeforeFirst).Days;
+            for (int i = 0; i < length; i++)
             {
                 DateTime day = oneDayBeforeFirst.AddDays(i);
                 Flight flightOnDay = flights.FirstOrDefault(f => f.DepartureTime.Date == day);
@@ -271,7 +231,19 @@ namespace GetRangeBinarySearchTest
                 else
                     Assert.AreEqual(flights[expectedIndex].DepartureTime.Date, flights[binarySearchIndex].DepartureTime.Date);
             }
-            
+        }
+
+        [TestMethod]
+        public void Selector_RangeTest()
+        {
+            DateTime low = flights.First().DepartureTime.AddDays(-1).Date;
+            DateTime high = flights.Last().DepartureTime.AddDays(1).Date;
+            int length = (high - low).Days;
+            for (int from = 0; from <= length; from++)
+                for (int to = from; to <= length; to++)
+                {
+                  //TODO write
+                }
         }
 
         private IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)

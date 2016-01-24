@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GetRangeBinarySearch
 {
     public static class GetRangeBinarySearchExtension
     {
+        public static T[] GetRangeBinarySearch<T, TSelected>(this IList<T> sourceList, Func<T, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
+        {
+            RangeIndex range = GetRangeIndex(new SelectWrapper<TSelected, T>(sourceList, selector), from, to, comparer);
+            return GetRangeFromList(sourceList, range);
+        }
+
         public static T[] GetRangeBinarySearch<T>(this IList<T> sourceList, T from, T to, IComparer<T> comparer = null)
         {
             RangeIndex range = GetRangeIndex(sourceList, from, to, comparer);
@@ -18,6 +21,12 @@ namespace GetRangeBinarySearch
         public static IEnumerable<T> GetRangeEnumerationBinarySearch<T>(this IList<T> sourceList, T from, T to, IComparer<T> comparer = null)
         {
             RangeIndex range = GetRangeIndex(sourceList, from, to, comparer);
+            return GetRangeFromEnumeration(sourceList, range);
+        }
+
+        public static IEnumerable<T> GetRangeEnumerationBinarySearch<T, TSelected>(this IList<T> sourceList, Func<T, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
+        {
+            RangeIndex range = GetRangeIndex(new SelectWrapper<TSelected, T>(sourceList, selector), from, to, comparer);
             return GetRangeFromEnumeration(sourceList, range);
         }
 
