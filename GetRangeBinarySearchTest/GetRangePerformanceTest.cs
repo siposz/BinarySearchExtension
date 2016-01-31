@@ -10,6 +10,7 @@ namespace GetRangeBinarySearchTest
     public partial class GetRangeTest
     {
         [TestMethod]
+        [Ignore]
         public void Performance_GetRangeBinary_RareValues()
         {
             //Measure performance, case: little number of equal values in source
@@ -21,6 +22,7 @@ namespace GetRangeBinarySearchTest
         }
 
         [TestMethod]
+        [Ignore]
         public void Performance_GetRangeBinary_AllEquals()
         {
             //Measure performance, case: all number equals

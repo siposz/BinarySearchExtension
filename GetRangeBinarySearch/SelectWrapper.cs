@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 
 namespace GetRangeBinarySearch
 {
-    internal class SelectWrapper<TSelected, TSource> : IList<TSelected>
+    internal class SelectWrapper<TSource, TSelected> : IList<TSelected>
     {
         private IList<TSource> WrappedList;
         Func<TSource, TSelected> Selector;
 
         public SelectWrapper(IList<TSource> sourceList, Func<TSource, TSelected> selector)
         {
+            if (sourceList == null)
+                throw new ArgumentNullException("sourceList");
+            if (selector == null)
+                throw new ArgumentNullException("selector");
             WrappedList = sourceList;
             Selector = selector;
         }

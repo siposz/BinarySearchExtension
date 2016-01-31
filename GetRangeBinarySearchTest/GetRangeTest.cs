@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GetRangeBinarySearch;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 //using static GetRangeBinarySearch.GetRangeBinarySearchExtension;
 
 namespace GetRangeBinarySearchTest
@@ -15,6 +16,17 @@ namespace GetRangeBinarySearchTest
         public void TestMethod1()
         {
 
+            try
+            {
+                Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-GB");
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-GB");
+                TestObjects.intValues.BinarySearch(0, 10000, 1, null);
+            }
+            catch (Exception ex)
+            {
+
+               
+            }
         }
 
         [TestInitialize]

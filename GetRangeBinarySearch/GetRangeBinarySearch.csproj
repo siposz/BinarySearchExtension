@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FindOneExtension.cs" />
     <Compile Include="GetRangeBinarySearchExtension.cs" />
     <Compile Include="IListBinarySearchExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,9 +6,9 @@ namespace GetRangeBinarySearch
 {
     public static class GetRangeBinarySearchExtension
     {
-        public static T[] GetRangeBinarySearch<T, TSelected>(this IList<T> sourceList, Func<T, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
+        public static TSource[] GetRangeBinarySearch<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
         {
-            RangeIndex range = GetRangeIndex(new SelectWrapper<TSelected, T>(sourceList, selector), from, to, comparer);
+            RangeIndex range = GetRangeIndex(new SelectWrapper<TSource, TSelected>(sourceList, selector), from, to, comparer);
             return GetRangeFromList(sourceList, range);
         }
 
@@ -24,9 +24,9 @@ namespace GetRangeBinarySearch
             return GetRangeFromEnumeration(sourceList, range);
         }
 
-        public static IEnumerable<T> GetRangeEnumerationBinarySearch<T, TSelected>(this IList<T> sourceList, Func<T, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
+        public static IEnumerable<TSource> GetRangeEnumerationBinarySearch<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
         {
-            RangeIndex range = GetRangeIndex(new SelectWrapper<TSelected, T>(sourceList, selector), from, to, comparer);
+            RangeIndex range = GetRangeIndex(new SelectWrapper<TSource, TSelected>(sourceList, selector), from, to, comparer);
             return GetRangeFromEnumeration(sourceList, range);
         }
 
@@ -76,7 +76,7 @@ namespace GetRangeBinarySearch
 
         private static int GetToIndex<T>(IList<T> source, T to, int fromIndex, IComparer<T> comparer)
         {
-            int toIndex = source.BinarySearch(fromIndex, source.Count - fromIndex, to, comparer);
+            int toIndex = source.BinarySearchIList(fromIndex, source.Count - fromIndex, to, comparer);
             if (toIndex < 0)
             {
                 //This is the last index where the element is smaller than to
@@ -92,7 +92,7 @@ namespace GetRangeBinarySearch
 
         private static int GetFromIndex<T>(IList<T> source, T from, IComparer<T> comparer)
         {
-            int fromIndex = source.BinarySearch(0, source.Count, from, comparer);
+            int fromIndex = source.BinarySearchIList(0, source.Count, from, comparer);
             if (fromIndex < 0)
                 //The first index where the element is larger than from
                 fromIndex = ~fromIndex;
