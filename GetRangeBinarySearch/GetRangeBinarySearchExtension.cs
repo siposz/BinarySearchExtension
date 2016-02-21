@@ -66,8 +66,10 @@ namespace BinarySearchExtension
         {
             if (source is List<T>)
                 return ((IList<T> s, int index, int length, T item, IComparer<T> comp) => (s as List<T>).BinarySearch(0, s.Count, item, comp));
-            else if (source is T[])
+
+            if (source is T[])
                 return ((IList<T> s, int index, int length, T item, IComparer<T> comp) => Array.BinarySearch(s as T[], 0, s.Count, item, comp));
+
             return ((IList<T> s, int index, int length, T item, IComparer<T> comp) => s.BinarySearchIList(0, s.Count, item, comp));
         }
 

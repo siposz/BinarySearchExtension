@@ -13,11 +13,21 @@ namespace BinarySearchExtension
         const string ArgumentOutOfRange_NeedNonNegNum = "Non-negative number required.";
         const string Argument_InvalidOffLen = "Offset and length were out of bounds for the list or count is greater than the number of elements from index to the end of the source collection.";
 
-        //public static int BinarySearchIList<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected value, IComparer<TSelected> comparer = null)
-        //{
-        //    return new SelectWrapper<TSource, TSelected>(sourceList, selector).BinarySearchIList(value, comparer);
-        //}
-
+        /// <summary>
+        ///    Searches a range of elements in the sorted, zero-based indexed System.Collections.Generic.IList`1
+        ///    for an element using the specified comparer and returns the zero-based index
+        ///    of the element.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceList"></param>
+        /// <param name="value">The object to locate. </param>
+        /// <param name="comparer">The System.Collections.Generic.IComparer implementation to use when comparing
+        ///     elements, or null to use the default comparer.</param>
+        /// <returns>  The zero-based index of item in the sorted System.Collections.Generic.IList,
+        ///     if item is found; otherwise, a negative number that is the bitwise complement
+        ///     of the index of the next element that is larger than item or, if there is no
+        ///     larger element, the bitwise complement of System.Collections.Generic.IList.Count.
+        ///</returns>
         public static int BinarySearchIList<T>(this IList<T> sourceList, T value, IComparer<T> comparer = null)
         {
             if (sourceList == null)
@@ -25,6 +35,23 @@ namespace BinarySearchExtension
             return BinarySearchIList(sourceList, 0, sourceList.Count, value, comparer);
         }
 
+        /// <summary>
+        ///    Searches a range of elements in the sorted, zero-based indexed System.Collections.Generic.IList`1
+        ///    for an element using the specified comparer and returns the zero-based index
+        ///    of the element.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceList"></param>
+        /// <param name="index"> The zero-based starting index of the range to search.</param>
+        /// <param name="length">The length of the range to search.</param>
+        /// <param name="value">The object to locate. </param>
+        /// <param name="comparer">The System.Collections.Generic.IComparer implementation to use when comparing
+        ///     elements, or null to use the default comparer.</param>
+        /// <returns>  The zero-based index of item in the sorted System.Collections.Generic.IList,
+        ///     if item is found; otherwise, a negative number that is the bitwise complement
+        ///     of the index of the next element that is larger than item or, if there is no
+        ///     larger element, the bitwise complement of System.Collections.Generic.IList.Count.
+        ///</returns>
         public static int BinarySearchIList<T>(this IList<T> sourceList, int index, int length, T value, IComparer<T> comparer = null)
         {
             if (sourceList == null)
@@ -42,18 +69,26 @@ namespace BinarySearchExtension
 
             int lowIndex = index;
             int hiIndex = index + length - 1;
-            while (lowIndex <= hiIndex)
+
+            try
             {
-                int i = lowIndex + ((hiIndex - lowIndex) >> 1);
-                int order = comparer.Compare(sourceList[i], value);
+                while (lowIndex <= hiIndex)
+                {
+                    int i = lowIndex + ((hiIndex - lowIndex) >> 1);
+                    int order = order = comparer.Compare(sourceList[i], value);
 
-                if (order == 0)
-                    return i;
+                    if (order == 0)
+                        return i;
 
-                if (order < 0)
-                    lowIndex = i + 1;
-                else
-                    hiIndex = i - 1;
+                    if (order < 0)
+                        lowIndex = i + 1;
+                    else
+                        hiIndex = i - 1;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("InvalidOperation IComparerFailed", e);
             }
 
             return ~lowIndex;
