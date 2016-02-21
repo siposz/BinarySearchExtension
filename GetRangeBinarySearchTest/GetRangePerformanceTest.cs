@@ -2,15 +2,14 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Collections.Generic;
-using GetRangeBinarySearch;
+using BinarySearchExtension;
 using System.Linq;
 
 namespace GetRangeBinarySearchTest
 {
     public partial class GetRangeTest
     {
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
         public void Performance_GetRangeBinary_RareValues()
         {
             //Measure performance, case: little number of equal values in source
@@ -21,8 +20,7 @@ namespace GetRangeBinarySearchTest
                 TestRun(minvalue * mulitplier, maxValue * mulitplier, number * mulitplier, 10000);
         }
 
-        [TestMethod]
-        [Ignore]
+        //[TestMethod]
         public void Performance_GetRangeBinary_AllEquals()
         {
             //Measure performance, case: all number equals

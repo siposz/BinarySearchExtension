@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GetRangeBinarySearch
+namespace BinarySearchExtension
 {
     internal class SelectWrapper<TSource, TSelected> : IList<TSelected>
     {

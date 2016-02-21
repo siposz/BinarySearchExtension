@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GetRangeBinarySearch
+namespace BinarySearchExtension
 {
     public static class GetRangeBinarySearchExtension
     {
@@ -45,19 +45,30 @@ namespace GetRangeBinarySearch
             if (comparer.Compare(from, to) > 0)
                 throw new ArgumentException("from should be smaller or equal than to");
 
-            int fromIndex = GetFromIndex(source, from, comparer);
+            Func<IList<T>, int, int, T, IComparer<T>, int> binarySearch = GetBinarySearchFunc(source);
+
+            int fromIndex = GetFromIndex(source, from, comparer, binarySearch);
 
             //All element of the source is smaller then from => return empty
             if (fromIndex == source.Count)
                 return RangeIndex.CreateEmpty();
 
-            int toIndex = GetToIndex(source, to, fromIndex, comparer);
+            int toIndex = GetToIndex(source, to, fromIndex, comparer, binarySearch);
 
             //All element of the source is larger then to => return empty
             if (toIndex < 0)
                 return RangeIndex.CreateEmpty();
 
             return new RangeIndex(fromIndex, toIndex);
+        }
+
+        private static Func<IList<T>, int, int, T, IComparer<T>, int> GetBinarySearchFunc<T>(IList<T> source)
+        {
+            if (source is List<T>)
+                return ((IList<T> s, int index, int length, T item, IComparer<T> comp) => (s as List<T>).BinarySearch(0, s.Count, item, comp));
+            else if (source is T[])
+                return ((IList<T> s, int index, int length, T item, IComparer<T> comp) => Array.BinarySearch(s as T[], 0, s.Count, item, comp));
+            return ((IList<T> s, int index, int length, T item, IComparer<T> comp) => s.BinarySearchIList(0, s.Count, item, comp));
         }
 
         private static T[] GetRangeFromList<T>(IList<T> sourceList, RangeIndex range)
@@ -74,9 +85,9 @@ namespace GetRangeBinarySearch
             return sourceList.Skip(range.FromIndex).Take(range.Length);
         }
 
-        private static int GetToIndex<T>(IList<T> source, T to, int fromIndex, IComparer<T> comparer)
+        private static int GetToIndex<T>(IList<T> sourceList, T to, int fromIndex, IComparer<T> comparer, Func<IList<T>, int, int, T, IComparer<T>, int> binarySearch)
         {
-            int toIndex = source.BinarySearchIList(fromIndex, source.Count - fromIndex, to, comparer);
+            int toIndex = binarySearch(sourceList, fromIndex, sourceList.Count - fromIndex, to, comparer);
             if (toIndex < 0)
             {
                 //This is the last index where the element is smaller than to
@@ -85,20 +96,20 @@ namespace GetRangeBinarySearch
             }
             else
                 //search for the last matching element
-                while (toIndex < source.Count - 1 && comparer.Compare(source[toIndex + 1], to) == 0)
+                while (toIndex < sourceList.Count - 1 && comparer.Compare(sourceList[toIndex + 1], to) == 0)
                     toIndex++;
             return toIndex;
         }
 
-        private static int GetFromIndex<T>(IList<T> source, T from, IComparer<T> comparer)
+        private static int GetFromIndex<T>(IList<T> sourceList, T from, IComparer<T> comparer, Func<IList<T>, int, int, T, IComparer<T>, int> binarySearch)
         {
-            int fromIndex = source.BinarySearchIList(0, source.Count, from, comparer);
+            int fromIndex = binarySearch(sourceList, 0, sourceList.Count, from, comparer);
             if (fromIndex < 0)
                 //The first index where the element is larger than from
                 fromIndex = ~fromIndex;
             else
                 //search for the first matching element
-                while (fromIndex > 0 && comparer.Compare(source[fromIndex - 1], from) == 0)
+                while (fromIndex > 0 && comparer.Compare(sourceList[fromIndex - 1], from) == 0)
                     fromIndex--;
             return fromIndex;
         }

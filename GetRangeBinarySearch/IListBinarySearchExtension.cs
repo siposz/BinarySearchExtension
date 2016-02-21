@@ -5,7 +5,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GetRangeBinarySearch
+namespace BinarySearchExtension
 {
     public static class IListBinarySearchExtension
     {
@@ -13,10 +13,10 @@ namespace GetRangeBinarySearch
         const string ArgumentOutOfRange_NeedNonNegNum = "Non-negative number required.";
         const string Argument_InvalidOffLen = "Offset and length were out of bounds for the list or count is greater than the number of elements from index to the end of the source collection.";
 
-        public static int BinarySearchIList<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected value, IComparer<TSelected> comparer = null)
-        {
-            return new SelectWrapper<TSource, TSelected>(sourceList, selector).BinarySearchIList(value, comparer);
-        }
+        //public static int BinarySearchIList<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected value, IComparer<TSelected> comparer = null)
+        //{
+        //    return new SelectWrapper<TSource, TSelected>(sourceList, selector).BinarySearchIList(value, comparer);
+        //}
 
         public static int BinarySearchIList<T>(this IList<T> sourceList, T value, IComparer<T> comparer = null)
         {
@@ -40,23 +40,23 @@ namespace GetRangeBinarySearch
             if (comparer == null)
                 comparer = comparer ?? Comparer<T>.Default;
 
-            int lo = index;
-            int hi = index + length - 1;
-            while (lo <= hi)
+            int lowIndex = index;
+            int hiIndex = index + length - 1;
+            while (lowIndex <= hiIndex)
             {
-                int i = lo + ((hi - lo) >> 1);
+                int i = lowIndex + ((hiIndex - lowIndex) >> 1);
                 int order = comparer.Compare(sourceList[i], value);
 
                 if (order == 0)
                     return i;
 
                 if (order < 0)
-                    lo = i + 1;
+                    lowIndex = i + 1;
                 else
-                    hi = i - 1;
+                    hiIndex = i - 1;
             }
 
-            return ~lo;
+            return ~lowIndex;
         }
     }
 }

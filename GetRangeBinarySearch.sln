@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetRangeBinarySearch", "GetRangeBinarySearch\GetRangeBinarySearch.csproj", "{0A1A22B1-1A14-4E4F-8D87-A951613DE785}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinarySearchExtension", "GetRangeBinarySearch\BinarySearchExtension.csproj", "{0A1A22B1-1A14-4E4F-8D87-A951613DE785}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetRangeBinarySearchTest", "GetRangeBinarySearchTest\GetRangeBinarySearchTest.csproj", "{8922BE6F-26D7-476C-84A6-1379E2DD1025}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinarySearchTest", "GetRangeBinarySearchTest\BinarySearchTest.csproj", "{8922BE6F-26D7-476C-84A6-1379E2DD1025}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
