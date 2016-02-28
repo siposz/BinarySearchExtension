@@ -133,7 +133,7 @@ namespace GetRangeBinarySearchTest
         public void GetRangeSlow_Test()
         {
             List<int> range;
-            range = GetRangeSlow(TestObjects.IntValuesList, -6, 3).ToList();
+            range = TestObjects.GetRangeSlow(TestObjects.IntValuesList, -6, 3).ToList();
             Assert.IsNotNull(range);
             Assert.IsTrue(range.SequenceEqual(new List<int> { -5, -2, 0, 0, 1, 2, 3 }));
         }
@@ -161,7 +161,7 @@ namespace GetRangeBinarySearchTest
                 for (int to = from; to <= high; to++)
                 {
                     var range = TestObjects.IntValuesList.GetRangeBinarySearch(from, to);
-                    var expectedRange = GetRangeSlow(TestObjects.IntValuesList, from, to);
+                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.IntValuesList, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -180,7 +180,7 @@ namespace GetRangeBinarySearchTest
                 for (int to = from; to <= high; to++)
                 {
                     var range = TestObjects.IntValuesArray.GetRangeBinarySearch(from, to);
-                    var expectedRange = GetRangeSlow(TestObjects.IntValuesList, from, to);
+                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.IntValuesList, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -199,7 +199,7 @@ namespace GetRangeBinarySearchTest
                 for (int to = from; to <= high; to++)
                 {
                     var range = TestObjects.IntValuesList.GetRangeEnumerationBinarySearch(from, to);
-                    var expectedRange = GetRangeSlow(TestObjects.IntValuesList, from, to);
+                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.IntValuesList, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -220,28 +220,9 @@ namespace GetRangeBinarySearchTest
                     DateTime dtFrom = low.AddDays(from);
                     DateTime dtTo = low.AddDays(to);
                     var range = TestObjects.Flights.GetRangeEnumerationBinarySearch(f => f.DepartureTime, dtFrom, dtTo);
-                    var expectedRange = GetRangeSlow(TestObjects.Flights, f => f.DepartureTime, dtFrom, dtTo);
+                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.Flights, f => f.DepartureTime, dtFrom, dtTo);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                 }
-        }
-
-        private IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)
-        {
-            //Get the default comparer
-            comparer = comparer ?? Comparer<T>.Default;
-            return source.Where(e => comparer.Compare(from, e) < 1 && comparer.Compare(to, e) > -1);
-        }
-
-        private IEnumerable<T> GetRangeSlow<T, TSelected>(IEnumerable<T> source, Func<T, TSelected> selector, TSelected from, TSelected to, Comparer<TSelected> comparer = null)
-        {
-            //Get the default comparer
-            comparer = comparer ?? Comparer<TSelected>.Default;
-            return source.
-                Where(e =>
-                {
-                    TSelected selected = selector(e);
-                    return comparer.Compare(from, selected) < 1 && comparer.Compare(to, selected) > -1;
-                });
         }
     }
 }

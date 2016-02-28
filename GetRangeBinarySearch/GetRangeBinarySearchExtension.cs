@@ -6,6 +6,7 @@ namespace BinarySearchExtension
 {
     public static class GetRangeBinarySearchExtension
     {
+
         public static TSource[] GetRangeBinarySearch<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
         {
             RangeIndex range = GetRangeIndex(new SelectWrapper<TSource, TSelected>(sourceList, selector), from, to, comparer);

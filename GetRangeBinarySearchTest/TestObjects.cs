@@ -25,5 +25,24 @@ namespace GetRangeBinarySearchTest
              new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,20,10,0,1,DateTimeKind.Utc) },
         };
 
+        internal static IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)
+        {
+            //Get the default comparer
+            comparer = comparer ?? Comparer<T>.Default;
+            return source.Where(e => comparer.Compare(from, e) < 1 && comparer.Compare(to, e) > -1);
+        }
+
+        internal static IEnumerable<T> GetRangeSlow<T, TSelected>(IEnumerable<T> source, Func<T, TSelected> selector, TSelected from, TSelected to, Comparer<TSelected> comparer = null)
+        {
+            //Get the default comparer
+            comparer = comparer ?? Comparer<TSelected>.Default;
+            return source.
+                Where(e =>
+                {
+                    TSelected selected = selector(e);
+                    return comparer.Compare(from, selected) < 1 && comparer.Compare(to, selected) > -1;
+                });
+        }
+
     }
 }
