@@ -1,8 +1,7 @@
-﻿using System;
+﻿using BinarySearchExtension;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using BinarySearchExtension;
 using System.Linq;
 
 namespace GetRangeBinarySearchTest
