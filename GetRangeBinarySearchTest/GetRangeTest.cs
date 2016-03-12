@@ -13,72 +13,36 @@ namespace GetRangeBinarySearchTest
     public partial class GetRangeTest
     {
         [TestMethod]
-        public void TestMethod1()
-        {
-
-            try
-            {
-                Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-GB");
-                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-GB");
-                TestObjects.IntValuesList.BinarySearch(0, 10000, 1, null);
-            }
-            catch (Exception ex)
-            {
-
-               
-            }
-        }
-
-        [TestInitialize]
-        public void Initalize()
-        {
-        }
-
-        [TestMethod]
         public void GetRange_ArgumentException()
         {
-            try
-            {
-                TestObjects.IntValuesList.GetRangeBinarySearch(-5, -6);
-                Assert.Fail();
-            }
-            catch (ArgumentException)
-            {
-
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            TestObjectsAndHelpers.AssertExpcetion<ArgumentException>(() => { TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-5, -6); });
         }
 
         [TestMethod]
         public void GetRange_ArgumentNullException()
         {
-            try
-            {
-                List<int> nullList = null;
-                nullList.GetRangeBinarySearch(-5, -6);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException)
-            {
+            List<int> nullList = null;
+            TestObjectsAndHelpers.AssertExpcetion<ArgumentNullException>(() => { nullList.GetRangeBinarySearch(0, 1); });
+        }
 
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+        [TestMethod]
+        public void GetRange_EmptyList()
+        {
+            List<int> emptyList = new List<int>();
+            int[] empty = emptyList.GetRangeBinarySearch(-5, -6);
+            Assert.IsNotNull(empty);
+            Assert.AreEqual(empty.Length, 0);
+
         }
 
         [TestMethod]
         public void GetRange_LargherThanAll()
         {
-            IList<int> range = TestObjects.IntValuesList.GetRangeBinarySearch(12, 12);
+            IList<int> range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(12, 12);
             Assert.IsNotNull(range);
             Assert.AreEqual(0, range.Count);
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(12, 13);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(12, 13);
             Assert.IsNotNull(range);
             Assert.AreEqual(0, range.Count);
         }
@@ -87,11 +51,11 @@ namespace GetRangeBinarySearchTest
         public void GetRange_LowerThanAll()
         {
             IList<int> range;
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(-6, -6);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-6, -6);
             Assert.IsNotNull(range);
             Assert.AreEqual(0, range.Count);
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(-7, -6);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-7, -6);
             Assert.IsNotNull(range);
             Assert.AreEqual(0, range.Count);
         }
@@ -100,31 +64,31 @@ namespace GetRangeBinarySearchTest
         public void GetRange_EqualFromTo()
         {
             IList<int> range;
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(-5, -5);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-5, -5);
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Count);
             Assert.IsTrue(range.SequenceEqual(new List<int> { -5 }));
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(-2, -2);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-2, -2);
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Count);
             Assert.IsTrue(range.SequenceEqual(new List<int> { -2 }));
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(0, 0);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(0, 0);
             Assert.IsNotNull(range);
             Assert.AreEqual(2, range.Count);
             Assert.IsTrue(range.SequenceEqual(new List<int> { 0, 0 }));
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(3, 3);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(3, 3);
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Count);
             Assert.IsTrue(range.SequenceEqual(new List<int> { 3 }));
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(4, 4);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(4, 4);
             Assert.IsNotNull(range);
             Assert.AreEqual(4, range.Count);
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(11, 11);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(11, 11);
             Assert.IsNotNull(range);
             Assert.AreEqual(2, range.Count);
         }
@@ -133,7 +97,7 @@ namespace GetRangeBinarySearchTest
         public void GetRangeSlow_Test()
         {
             List<int> range;
-            range = TestObjects.GetRangeSlow(TestObjects.IntValuesList, -6, 3).ToList();
+            range = TestObjectsAndHelpers.GetRangeSlow(TestObjectsAndHelpers.IntValuesList, -6, 3).ToList();
             Assert.IsNotNull(range);
             Assert.IsTrue(range.SequenceEqual(new List<int> { -5, -2, 0, 0, 1, 2, 3 }));
         }
@@ -142,13 +106,13 @@ namespace GetRangeBinarySearchTest
         public void GetRange_Full()
         {
             IList<int> range;
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(-5, 11);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-5, 11);
             Assert.IsNotNull(range);
-            Assert.AreEqual(TestObjects.IntValuesList.Count, range.Count);
+            Assert.AreEqual(TestObjectsAndHelpers.IntValuesList.Count, range.Count);
 
-            range = TestObjects.IntValuesList.GetRangeBinarySearch(-6, 12);
+            range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(-6, 12);
             Assert.IsNotNull(range);
-            Assert.AreEqual(TestObjects.IntValuesList.Count, range.Count);
+            Assert.AreEqual(TestObjectsAndHelpers.IntValuesList.Count, range.Count);
         }
 
         [TestMethod]
@@ -160,8 +124,8 @@ namespace GetRangeBinarySearchTest
             for (int from = low; from <= high; from++)
                 for (int to = from; to <= high; to++)
                 {
-                    var range = TestObjects.IntValuesList.GetRangeBinarySearch(from, to);
-                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.IntValuesList, from, to);
+                    var range = TestObjectsAndHelpers.IntValuesList.GetRangeBinarySearch(from, to);
+                    var expectedRange = TestObjectsAndHelpers.GetRangeSlow(TestObjectsAndHelpers.IntValuesList, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -171,7 +135,7 @@ namespace GetRangeBinarySearchTest
         }
 
         [TestMethod]
-        public void GetRange_MassTest_Array()
+        public void GetRangeArrayTest()
         {
             int counter = 0;
             int low = -8;
@@ -179,8 +143,8 @@ namespace GetRangeBinarySearchTest
             for (int from = low; from <= high; from++)
                 for (int to = from; to <= high; to++)
                 {
-                    var range = TestObjects.IntValuesArray.GetRangeBinarySearch(from, to);
-                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.IntValuesList, from, to);
+                    var range = TestObjectsAndHelpers.IntValuesArray.GetRangeBinarySearch(from, to);
+                    var expectedRange = TestObjectsAndHelpers.GetRangeSlow(TestObjectsAndHelpers.IntValuesList, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -190,7 +154,24 @@ namespace GetRangeBinarySearchTest
         }
 
         [TestMethod]
-        public void GetRangeEnumeration_List_MassTest()
+        public void Selector_GetRangeArrayTest()
+        {
+            DateTime low = TestObjectsAndHelpers.Flights.First().DepartureTime.AddDays(-1).Date;
+            DateTime high = TestObjectsAndHelpers.Flights.Last().DepartureTime.AddDays(1).Date;
+            int length = (high - low).Days;
+            for (int from = 0; from <= length; from++)
+                for (int to = from; to <= length; to++)
+                {
+                    DateTime dtFrom = low.AddDays(from);
+                    DateTime dtTo = low.AddDays(to);
+                    Flight[] range = TestObjectsAndHelpers.Flights.GetRangeBinarySearch(f => f.DepartureTime, dtFrom, dtTo);
+                    var expectedRange = TestObjectsAndHelpers.GetRangeSlow(TestObjectsAndHelpers.Flights, f => f.DepartureTime, dtFrom, dtTo);
+                    Assert.IsTrue(expectedRange.SequenceEqual(range));
+                }
+        }
+
+        [TestMethod]
+        public void GetRangeEnumerationTest()
         {
             int counter = 0;
             int low = -8;
@@ -198,8 +179,8 @@ namespace GetRangeBinarySearchTest
             for (int from = low; from <= high; from++)
                 for (int to = from; to <= high; to++)
                 {
-                    var range = TestObjects.IntValuesList.GetRangeEnumerationBinarySearch(from, to);
-                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.IntValuesList, from, to);
+                    var range = TestObjectsAndHelpers.IntValuesList.GetRangeEnumerationBinarySearch(from, to);
+                    var expectedRange = TestObjectsAndHelpers.GetRangeSlow(TestObjectsAndHelpers.IntValuesList, from, to);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                     counter++;
                 }
@@ -211,16 +192,16 @@ namespace GetRangeBinarySearchTest
         [TestMethod]
         public void Selector_GetRangeEnumerationTest()
         {
-            DateTime low = TestObjects.Flights.First().DepartureTime.AddDays(-1).Date;
-            DateTime high = TestObjects.Flights.Last().DepartureTime.AddDays(1).Date;
+            DateTime low = TestObjectsAndHelpers.Flights.First().DepartureTime.AddDays(-1).Date;
+            DateTime high = TestObjectsAndHelpers.Flights.Last().DepartureTime.AddDays(1).Date;
             int length = (high - low).Days;
             for (int from = 0; from <= length; from++)
                 for (int to = from; to <= length; to++)
                 {
                     DateTime dtFrom = low.AddDays(from);
                     DateTime dtTo = low.AddDays(to);
-                    var range = TestObjects.Flights.GetRangeEnumerationBinarySearch(f => f.DepartureTime, dtFrom, dtTo);
-                    var expectedRange = TestObjects.GetRangeSlow(TestObjects.Flights, f => f.DepartureTime, dtFrom, dtTo);
+                    var range = TestObjectsAndHelpers.Flights.GetRangeEnumerationBinarySearch(f => f.DepartureTime, dtFrom, dtTo);
+                    var expectedRange = TestObjectsAndHelpers.GetRangeSlow(TestObjectsAndHelpers.Flights, f => f.DepartureTime, dtFrom, dtTo);
                     Assert.IsTrue(expectedRange.SequenceEqual(range));
                 }
         }

@@ -14,19 +14,19 @@ namespace BinarySearchExtension
         const string Argument_InvalidOffLen = "Offset and length were out of bounds for the list or count is greater than the number of elements from index to the end of the source collection.";
 
         /// <summary>
-        ///    Searches a range of elements in the sorted, zero-based indexed System.Collections.Generic.IList`1
+        ///    Searches a range of elements in the sorted, zero-based indexed <see cref="System.Collections.Generic.IList{T}" />
         ///    for an element using the specified comparer and returns the zero-based index
         ///    of the element.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sourceList"></param>
         /// <param name="value">The object to locate. </param>
-        /// <param name="comparer">The System.Collections.Generic.IComparer implementation to use when comparing
+        /// <param name="comparer">The <see cref="System.Collections.Generic.IComparer{T}" /> implementation to use when comparing
         ///     elements, or null to use the default comparer.</param>
-        /// <returns>  The zero-based index of item in the sorted System.Collections.Generic.IList,
+        /// <returns>  The zero-based index of item in the sorted <see cref="System.Collections.Generic.IList{T}" />,
         ///     if item is found; otherwise, a negative number that is the bitwise complement
         ///     of the index of the next element that is larger than item or, if there is no
-        ///     larger element, the bitwise complement of System.Collections.Generic.IList.Count.
+        ///     larger element, the bitwise complement of <see cref="System.Collections.Generic.ICollection{T}.Count" />.
         ///</returns>
         public static int BinarySearchIList<T>(this IList<T> sourceList, T value, IComparer<T> comparer = null)
         {
@@ -36,7 +36,7 @@ namespace BinarySearchExtension
         }
 
         /// <summary>
-        ///    Searches a range of elements in the sorted, zero-based indexed System.Collections.Generic.IList`1
+        ///    Searches a range of elements in the sorted, zero-based indexed <see cref="System.Collections.Generic.IList{T}" />
         ///    for an element using the specified comparer and returns the zero-based index
         ///    of the element.
         /// </summary>
@@ -45,12 +45,12 @@ namespace BinarySearchExtension
         /// <param name="index"> The zero-based starting index of the range to search.</param>
         /// <param name="length">The length of the range to search.</param>
         /// <param name="value">The object to locate. </param>
-        /// <param name="comparer">The System.Collections.Generic.IComparer implementation to use when comparing
+        /// <param name="comparer">The <see cref="System.Collections.Generic.IComparer{T}" /> implementation to use when comparing
         ///     elements, or null to use the default comparer.</param>
-        /// <returns>  The zero-based index of item in the sorted System.Collections.Generic.IList,
+        /// <returns>  The zero-based index of item in the <see cref="System.Collections.Generic.IList{T}" />,
         ///     if item is found; otherwise, a negative number that is the bitwise complement
         ///     of the index of the next element that is larger than item or, if there is no
-        ///     larger element, the bitwise complement of System.Collections.Generic.IList.Count.
+        ///     larger element, the bitwise complement of <see cref="System.Collections.Generic.ICollection{T}.Count" />.
         ///</returns>
         public static int BinarySearchIList<T>(this IList<T> sourceList, int index, int length, T value, IComparer<T> comparer = null)
         {
@@ -75,7 +75,7 @@ namespace BinarySearchExtension
                 while (lowIndex <= hiIndex)
                 {
                     int i = lowIndex + ((hiIndex - lowIndex) >> 1);
-                    int order = order = comparer.Compare(sourceList[i], value);
+                    int order = comparer.Compare(sourceList[i], value);
 
                     if (order == 0)
                         return i;

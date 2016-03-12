@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace GetRangeBinarySearchTest
 {
-    internal static class TestObjects
+    internal static class TestObjectsAndHelpers
     {
         internal static List<int> IntValuesList = new List<int>() { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
 
         internal static int[] IntValuesArray = new int[] { -5, -2, 0, 0, 1, 2, 3, 4, 4, 4, 4, 6, 6, 8, 9, 11, 11 };
-
 
         internal static List<Flight> Flights = new List<Flight>()
         {
@@ -24,6 +24,21 @@ namespace GetRangeBinarySearchTest
              new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,8,10,0,1,DateTimeKind.Utc) },
              new Flight() { DepartureStation = "VNO", ArrivalStation = "LTN", DepartureTime = new DateTime(2015,1,20,10,0,1,DateTimeKind.Utc) },
         };
+
+        public static void AssertExpcetion<T>(Action action)
+            where T : Exception
+        {
+            try
+            {
+                action();
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                if (!(ex is T))
+                    Assert.Fail();
+            }
+        }
 
         internal static IEnumerable<T> GetRangeSlow<T>(IEnumerable<T> source, T from, T to, Comparer<T> comparer = null)
         {

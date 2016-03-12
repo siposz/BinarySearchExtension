@@ -54,7 +54,7 @@ namespace GetRangeBinarySearchTest
             {
                 int from = rnd.Next(minValue, maxValue);
                 int to = from + 1000;
-                TestObjects.GetRangeSlow(elements, from, to).ToArray();
+                TestObjectsAndHelpers.GetRangeSlow(elements, from, to).ToArray();
             }
             sw.Stop();
             Trace.WriteLine("GetRangeSlow: " + sw.ElapsedMilliseconds.ToString());

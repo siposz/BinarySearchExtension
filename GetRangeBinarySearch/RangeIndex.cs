@@ -11,7 +11,6 @@ namespace BinarySearchExtension
         public int FromIndex { get; private set; }
         public int ToIndex { get; private set; }
         public int Length { get { return ToIndex - FromIndex + 1; } }
-        public bool IsEmpty { get { return ToIndex < FromIndex; } }
 
         public static RangeIndex CreateEmpty()
         {

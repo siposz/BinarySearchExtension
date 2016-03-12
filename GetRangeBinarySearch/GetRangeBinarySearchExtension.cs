@@ -6,25 +6,69 @@ namespace BinarySearchExtension
 {
     public static class GetRangeBinarySearchExtension
     {
-
+        /// <summary>
+        /// Returns an array from an ordered list of source values based on selected from and to.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSelected">The type of the value returned by selector.</typeparam>
+        /// <param name="sourceList"></param>
+        /// <param name="selector">A transform function to apply to elements during range search.</param>
+        /// <param name="from">The inclusive low value of the range</param>
+        /// <param name="to">The inclusive high value of the range</param>
+        /// <param name="comparer">A <see cref="System.Collections.Generic.IComparer{TSelected}" /> to compare values.</param>
+        /// <returns> An Array that contains elements from the source list 
+        /// whose selected values are greater than or equal to "from" and less than or equals to "to" </returns>
         public static TSource[] GetRangeBinarySearch<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
         {
             RangeIndex range = GetRangeIndex(new SelectWrapper<TSource, TSelected>(sourceList, selector), from, to, comparer);
             return GetRangeFromList(sourceList, range);
         }
 
+        /// <summary>
+        /// Returns an array from an ordered list of values based on from and to.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <param name="sourceList"></param>
+        /// <param name="from">The inclusive low value of the range</param>
+        /// <param name="to">The inclusive high value of the range</param>
+        /// <param name="comparer">A <see cref="System.Collections.Generic.IComparer{T}" /> to compare values.</param>
+        /// <returns>An Array that contains elements from the source list 
+        /// that are greater than or equal to "from" and less than or equals to "to"</returns>
         public static T[] GetRangeBinarySearch<T>(this IList<T> sourceList, T from, T to, IComparer<T> comparer = null)
         {
             RangeIndex range = GetRangeIndex(sourceList, from, to, comparer);
             return GetRangeFromList(sourceList, range);
         }
 
+
+        /// <summary>
+        /// Filters an ordered list of values based on from and to.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <param name="sourceList"></param>
+        /// <param name="from">The inclusive low value of the range</param>
+        /// <param name="to">The inclusive high value of the range</param>
+        /// <param name="comparer">A <see cref="System.Collections.Generic.IComparer{T}" /> to compare values.</param>
+        /// <returns>An IEnumerable that contains elements from the source list 
+        /// that are greater than or equal to "from" and less than or equals to "to"</returns>
         public static IEnumerable<T> GetRangeEnumerationBinarySearch<T>(this IList<T> sourceList, T from, T to, IComparer<T> comparer = null)
         {
             RangeIndex range = GetRangeIndex(sourceList, from, to, comparer);
             return GetRangeFromEnumeration(sourceList, range);
         }
 
+        /// <summary>
+        /// Filters an ordered list of source values based on selected from and to.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSelected">The type of the value returned by selector.</typeparam>
+        /// <param name="sourceList"></param>
+        /// <param name="selector">A transform function to apply to elements during range search.</param>
+        /// <param name="from">The inclusive low value of the range.</param>
+        /// <param name="to">The inclusive high value of the range.</param>
+        /// <param name="comparer">A <see cref="System.Collections.Generic.IComparer{TSelected}" /> to compare values.</param>
+        /// <returns> An IEnumerable that contains elements from the source list 
+        /// whose selected values are greater than or equal to "from" and less than or equals to "to" </returns>
         public static IEnumerable<TSource> GetRangeEnumerationBinarySearch<TSource, TSelected>(this IList<TSource> sourceList, Func<TSource, TSelected> selector, TSelected from, TSelected to, IComparer<TSelected> comparer = null)
         {
             RangeIndex range = GetRangeIndex(new SelectWrapper<TSource, TSelected>(sourceList, selector), from, to, comparer);

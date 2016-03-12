@@ -68,6 +68,7 @@
     <Compile Include="BinarySearchTest.cs" />
     <Compile Include="PerformanceTest.cs" />
     <Compile Include="FindOneTest.cs" />
+    <Compile Include="WrongIntComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GetRangeBinarySearch\BinarySearchExtension.csproj">
