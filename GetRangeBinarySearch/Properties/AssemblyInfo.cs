@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GetRangeBinarySearch")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("BinarySearchExtension")]
+[assembly: AssemblyDescription("Binary search extension for IList, Get range from ordered list")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GetRangeBinarySearch")]
+[assembly: AssemblyProduct("BinarySearchExtension")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -50,6 +50,7 @@
     <Compile Include="SelectWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BinarySearchExtension.nuspec" />
     <None Include="bse_key.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
