@@ -10,8 +10,8 @@
     <!--<projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>-->
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <releaseNotes>Binary search extension for IList, Get range from ordered list</releaseNotes>
+    <description>Binary search extension for IList, Get range from ordered list</description>
+    <releaseNotes>First release</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>BinarySearch GetRange</tags>
   </metadata>
